@@ -156,7 +156,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 681c3a82ed51a634c85cde68cbbf9159, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Path: []
+  Path:
+  - {x: 3, y: 4}
 --- !u!136 &282549615
 CapsuleCollider:
   m_ObjectHideFlags: 0

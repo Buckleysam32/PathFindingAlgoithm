@@ -36,7 +36,7 @@ public class NPC : MonoBehaviour
                 newtarget);
         }
         if (Path.Count != 0)
-        {
+        {   
             Vector3 target = new Vector3(
                 Path[Path.Count - 1].x + Pathfind.CellSize * 0.5f, 
                 0.5f, 
