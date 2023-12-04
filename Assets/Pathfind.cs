@@ -157,79 +157,77 @@ public class Pathfind : MonoBehaviour
             Vector2Int lowestFCoord = openList[0];
             int lowestF = GetNode(lowestFCoord).F;
             int lowestFIndex = 0;
-
-            //lowestF is first open list node F
-
-            //for each open list node
-            for(int i = 1; i < openList.Count; i++)
+            for (int i = 1; i < openList.Count; i++)
             {
-                if(GetNode(openList[i])).F < lowestFIndex)
+                if (GetNode(openList[i]).F < lowestF)
                 {
-                    lowestFIndex = i;
-                    
+                    lowestFIndex = 1;
+                    lowestFCoord = openList[i];
+                    lowestF = GetNode(lowestFCoord).F;
                 }
-                
+
             }
 
-        currentCoord = lowestFCoord;
-        Node currentNode = GetNode(currentCoord);
-        currentNode.state = Node.State.Closed;
-        openList.RemoveAt(lowestFIndex);
+            currentCoord = lowestFCoord;
+            Node currentNode = GetNode(currentCoord);
+            currentNode.state = Node.State.Closed;
+            openList.RemoveAt(lowestFIndex);
 
-        for(int i=0; i<directions.Length; i++) 
-        { 
-            Vector2Int adjacentCoord = currentCoord + directions[i];
-            Node adjacentNode = GetNode(adjacentCoord);
+            for (int i = 0; i < directions.Length; i++)
+            {
+                Vector2Int adjacentCoord = currentCoord + directions[i];
+                Node adjacentNode = GetNode(adjacentCoord);
 
-            int cost = adjacentNode.C;
+                int cost = adjacentNode.C;
 
-            if (adjacentNode.Wall)
-            {
-                //Skip
-            }
-            else if(adjacentNode.state == Node.State.Closed)
-            {
-                //Skip
-            }
-            else if(adjacentNode.state == Node.State.Open)
-            {
-                if(adjacentNode.G > currentNode.G + cost)
-                { 
+                if (adjacentNode.Wall)
+                {
+                    //Skip
+                }
+                else if (adjacentNode.state == Node.State.Closed)
+                {
+                    //Skip
+                }
+                else if (adjacentNode.state == Node.State.Open)
+                {
+                    if (adjacentNode.G > currentNode.G + cost)
+                    {
+                        adjacentNode.G = currentNode.G + cost;
+                        adjacentNode.H = 0;
+                        adjacentNode.F = adjacentNode.G + adjacentNode.H;
+                        adjacentNode.Parent = currentCoord;
+
+                    }
+                }
+                else if (adjacentNode.state == Node.State.None)
+                {
                     adjacentNode.G = currentNode.G + cost;
                     adjacentNode.H = 0;
                     adjacentNode.F = adjacentNode.G + adjacentNode.H;
                     adjacentNode.Parent = currentCoord;
-                
+                    adjacentNode.state = Node.State.Open;
+                    openList.Add(adjacentCoord);
                 }
-            }
-            else if(adjacentNode.state == Node.State.None) 
-            {
-                adjacentNode.G = currentNode.G + cost;
-                adjacentNode.H = 0;
-                adjacentNode.F = adjacentNode.G + adjacentNode.H;
-                adjacentNode.Parent = currentCoord;
-                adjacentNode.state = Node.State.Open;
-                openList.Add(adjacentCoord);
+
+
             }
 
-        
+            if (GetNode(end).state == Node.State.Closed)
+            {
+                List<Vector2Int> path = new List<Vector2Int>();
+
+                Vector2Int backtackCoord = end;
+                while (backtackCoord.x != -1)
+                {
+                    path.Add(backtackCoord);
+                    backtackCoord = GetNode(backtackCoord).Parent;
+                }
+                return path;
+            }
         }
 
-        if(GetNode(end).state == Node.State.Closed)
-        { 
-            List<Vector2Int> path = new List<Vector2Int>();
-
-            Vector2Int backtackCoord = end;
-            while(backtackCoord.x != -1)
-            {
-                path.Add(backtackCoord);
-                backtackCoord = GetNode(backtackCoord).Parent;
-            }
-            return path;
-        }
-
-        // Return empty path
-        return new List<Vector2Int>();
+            // Return empty path
+            return new List<Vector2Int>();
 
     }
 }
